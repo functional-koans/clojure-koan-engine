@@ -19,6 +19,7 @@
           unreplaced-texts
           (concat (map pr-str replacements) (repeat k)))))))
 
+;;
 (defn koan-text [koan]
   (slurp (str "src/koans/" koan ".clj")))
 

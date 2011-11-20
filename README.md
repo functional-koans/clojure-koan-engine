@@ -1,3 +1,72 @@
+# Koan Engine
+
+(Notes on a more general version of Clojure koans.) A koan engine needs:
+
+* A library that makes "meditations", etc available
+* A lein plugin -- `lein-koan` -- that pulls this library into a project and makes two commands available:
+
+     lein koan run
+     lein koan test
+
+* Project template with [lein-newnew](https://github.com/Raynes/lein-newnew) to allow for creation of new projects. The template will include the lein plugin as a dev-dependency, a few required resource files (discussed below), an example koan file and a special key-value pair for koans in `project.clj`.
+
+### project.clj entries:
+  
+    :koan {:koan-root "src/koans"     ;; koan files live at this root
+           :dojo-resource "dojo"      ;; All koans are evaluated within the namespace defined in resources/dojo.clj.
+           :answer-resource "answers" ;; answers at resources/answers.clj 
+           :koan-resource "koans"}    ;; koans at resources/koans.clj 
+
+
+### resources/dojo.clj
+
+Projects need to make their APIs available; this file should contain either forms to be evaluated before each koan, like this:
+
+    (use 'cascalog.api)
+    (use '[cascalog.testing :only (test?-)])
+
+Or a full-on namespace declaration:
+
+    (ns cascalog.koans
+      (:use cascalog.api))
+
+Not sure what's best on this.
+
+*resources/koans.clj*
+
+Should contain a vector of koan paths, like so:
+
+    ["tuples"
+     "traps"
+     "ops/mapper"]
+
+The "meditations" library will look for the koans at `(format "%s/%s.clj" koan-root vec-entry)`.
+
+### resources/answers.clj
+
+This file should contain a map keyed on koan path with answer values, just as in the current project:
+
+    {"tuples" {"__" [
+                     [["truth."]]
+                     [[1]]
+                     ]}
+     "ops/mapper" {"__" [
+                         [[true answer 2!"]]
+                         ]}
+     ...etc...}
+
+Alternatively to prevent duplication, `koans.clj` could hold a vector of 2-vectors, with name and answer:
+
+    [["tuples" {"__" [
+                     [["truth."]]
+                     [[1]]
+                     ]}]
+     ["ops/mapper" {"__" [
+                         [[true answer 2!"]]
+                         ]}]]
+
+`lein koan test` can validate these formats.
+
 # Clojure Koans
 
 The Clojure Koans are a fun and easy way to get started with Clojure - no
@@ -37,7 +106,6 @@ After you have leiningen installed, run
 `lein deps`
 
 which will download all dependencies you need to run the Clojure koans.
-
 
 ### Running the Koans
 
