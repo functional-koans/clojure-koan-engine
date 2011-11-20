@@ -1,26 +1,10 @@
 (ns runner.koans
   (:use [clojure.java.io :only [file]]))
 
+;; Add more koan namespaces here.
 (def ordered-koans
-     ["equalities"
-      "lists"
-      "vectors"
-      "sets"
-      "maps"
-      "functions"
-      "conditionals"
-      "higher_order_functions"
-      "runtime_polymorphism"
-      "lazy_sequences"
-      "sequence_comprehensions"
-      "creating_functions"
-      "recursion"
-      "destructuring"
-      "refs"
-      "atoms"
-      "macros"
-      "datatypes"
-      "java_interop"])
+  ["tuples"
+   ])
 
 (defn ordered-koan-paths  []
   (map (fn [koan-name]
@@ -38,20 +22,22 @@
         (recur more)))))
 
 (defn tests-pass? [file-path]
-  (use '[path-to-enlightenment :only [meditations __ ___]])
-  (try
-    (load-file file-path)
-    true
-    (catch Exception e
-      (println)
-      (println "Problem in" file-path)
-      (println "---------------------")
-      (println "Assertion failed!")
-      (let [actual-error (or (.getCause e) e)
-            message (or (.getMessage actual-error)
-                        (.toString actual-error))]
-        (println (.replaceFirst message "^Assert failed: " "")))
-      false)))
+  (binding [*ns* (create-ns (gensym "koans"))]
+    (refer 'clojure.core)
+    (use 'cascalog.api)
+    (use '[path-to-enlightenment :only [meditations ?= __ ___]])
+    (try (load-file file-path)
+         true
+         (catch Exception e
+           (println)
+           (println "Problem in" file-path)
+           (println "---------------------")
+           (println "Assertion failed!")
+           (let [actual-error (or (.getCause e) e)
+                 message (or (.getMessage actual-error)
+                             (.toString actual-error))]
+             (println (.replaceFirst message "^Assert failed: " "")))
+           false))))
 
 (defn namaste []
   (println "\nYou have achieved clojure enlightenment. Namaste."))

@@ -1,19 +1,23 @@
 (ns path-to-enlightenment
-  (:use [runner.freshness :only [setup-freshener]])
+  (:use [cascalog.testing :only (test?-)]
+        [cascalog.util :only (defalias)]
+        [runner.freshness :only [setup-freshener]])
   (:require [clojure.set]
             [clojure.string]))
 
 (def __ :fill-in-the-blank)
 (def ___ (fn [& args] __))
 
+;; More concise for koans.
+(defalias ?= test?-)
+
 (defmacro fancy-assert
   ([x] (fancy-assert x ""))
   ([x message]
-   `(try
-     (assert ~x ~message)
-     (catch Exception e#
-       (throw (Exception. (str '~message "\n" '~x )
-                          e#))))))
+     `(try (assert ~x ~message)
+           (catch Exception e#
+             (throw (Exception. (str '~message "\n" '~x )
+                                e#))))))
 
 (defmacro meditations [& forms]
   (let [pairs (partition 2 forms)
