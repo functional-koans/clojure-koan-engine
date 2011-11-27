@@ -3,7 +3,7 @@
 (meditations
  "We shall contemplate truth by testing reality, via equality."
  (= __ [["truth."]])
-
+ 
  "Queries produce results..."
  (?= __ (<- [?x]
             (one-tuple ?x)))

@@ -2,12 +2,11 @@
   (:use [clojure.java.io :only [file resource]])
   (:require [koan-engine.util :as u]))
 
-;; Add more koan namespaces here.
+;; TODO: Proper koan validation. Accept the path as an argument.
 (defn ordered-koans []
-  (if-let [conf-path (resource "job-conf.clj")]
+  (if-let [conf-path (resource "koans.clj")]
     (try (let [conf (-> conf-path slurp read-string)]
-           (u/safe-assert (map? conf)
-                          "job-conf.clj must produce a map of config parameters!")
+           (u/safe-assert (map? conf) "Koans aren't valid!")
            conf)
          (catch RuntimeException e
            (throw (Exception. "Error reading job-conf.clj!\n\n") e)))
@@ -31,8 +30,8 @@
         (first more)
         (recur more)))))
 
-(defn tests-pass? [file-path]
-  (u/with-dojo ["dojo.clj"]
+(defn tests-pass? [dojo-path file-path]
+  (u/with-dojo [dojo-path]
     (try (load-file file-path)
          true
          (catch Exception e

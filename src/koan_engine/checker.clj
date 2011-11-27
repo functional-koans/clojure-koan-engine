@@ -48,10 +48,6 @@
                    pairs)]
     `(do ~@tests)))
 
-;; This needs to occur in the project-koan-specific namespace, else
-;; load-string won't have the proper requirements.
-;;
-;; In the actual koan we prefix form with some use and requires.
 (defn ensure-failing-without-answers [dojo-path]
   (if (every?
        (fn [koan]
