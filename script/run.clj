@@ -1,4 +1,5 @@
-(load "path_to_enlightenment")
+(load "koan_engine/core")
 (do
-  (in-ns 'path-to-enlightenment)
-  (run))
+  (in-ns 'koan-engine.core)
+  (println "RUNNINBG")
+  (-main))

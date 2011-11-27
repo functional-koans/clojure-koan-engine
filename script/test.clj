@@ -1,4 +1,4 @@
-(load "path_to_answer_sheet")
+(load "koan_engine/checker")
 (do
-  (in-ns 'path-to-answer-sheet)
+  (in-ns 'koan-engine.checker)
   (run))

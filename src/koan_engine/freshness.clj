@@ -1,12 +1,12 @@
-(ns runner.freshness
+(ns koan-engine.freshness
   (:use [fresh.core :only [clj-files-in freshener]]
         [clojure.java.io :only [file]]
-        [runner.koans :only [among-paths?
-                             namaste
-                             next-koan-path
-                             ordered-koans
-                             ordered-koan-paths
-                             tests-pass?]])
+        [koan-engine.koans :only [among-paths?
+                                  namaste
+                                  next-koan-path
+                                  ordered-koans
+                                  ordered-koan-paths
+                                  tests-pass?]])
   (:import [java.util.concurrent ScheduledThreadPoolExecutor TimeUnit]))
 
 (defn files-to-keep-fresh []
@@ -15,8 +15,8 @@
 (defn report-refresh [report]
   (when-let [refreshed-files (seq (:reloaded report))]
     (let [these-koans (filter
-                        (among-paths? refreshed-files)
-                        (ordered-koan-paths))]
+                       (among-paths? refreshed-files)
+                       (ordered-koan-paths))]
       (when (every? tests-pass? these-koans)
         (if-let [next-koan-file (file (next-koan-path (last these-koans)))]
           (report-refresh {:reloaded [next-koan-file]})

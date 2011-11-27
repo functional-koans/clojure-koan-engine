@@ -1,14 +1,24 @@
-(ns runner.koans
-  (:use [clojure.java.io :only [file]]))
+(ns koan-engine.koans
+  (:use [clojure.java.io :only [file resource]])
+  (:require [koan-engine.util :as u]))
 
 ;; Add more koan namespaces here.
+(defn ordered-koans []
+  (if-let [conf-path (resource "job-conf.clj")]
+    (try (let [conf (-> conf-path slurp read-string)]
+           (u/safe-assert (map? conf)
+                          "job-conf.clj must produce a map of config parameters!")
+           conf)
+         (catch RuntimeException e
+           (throw (Exception. "Error reading job-conf.clj!\n\n") e)))
+    {}))
+
 (def ordered-koans
-  ["tuples"
-   ])
+  ["tuples"])
 
 (defn ordered-koan-paths  []
   (map (fn [koan-name]
-           (.getCanonicalPath (file "src" "koans" (str koan-name ".clj"))))
+         (.getCanonicalPath (file "src" "koans" (str koan-name ".clj"))))
        ordered-koans))
 
 (defn among-paths? [files]
@@ -24,8 +34,8 @@
 (defn tests-pass? [file-path]
   (binding [*ns* (create-ns (gensym "koans"))]
     (refer 'clojure.core)
-    (use 'cascalog.api)
-    (use '[path-to-enlightenment :only [meditations ?= __ ___]])
+    (use 'cascalog.api) ;; TODO: Move out other namespace.
+    (use '[koan-engine.core :only [meditations ?= __ ___]])
     (try (load-file file-path)
          true
          (catch Exception e
@@ -41,4 +51,3 @@
 
 (defn namaste []
   (println "\nYou have achieved clojure enlightenment. Namaste."))
-

@@ -5,19 +5,25 @@
  (= __ [["truth."]])
 
  "Queries produce results..."
- (?= __ (<- [?x] (one-tuple ?x)))
+ (?= __ (<- [?x]
+            (one-tuple ?x)))
 
  "All sorts of sequences do the job."
- (?= __ (<- [?x] ([[1]] ?x)))
+ (?= __ (<- [?x]
+            ([[1]] ?x)))
 
  "Lists, anyone?"
- (?= __ (<- [?x] ((list [1]) ?x)))
+ (?= __ (<- [?x]
+            ((list [1]) ?x)))
 
  "From whence do these tuples come?"
- (?= [[4]] (<- [?x] (__ ?x)))
+ (?= [[4]] (<- [?x]
+               (__ ?x)))
 
  "Name something well to give it power."
- (?= one-tuple (<- [?x] (one-tuple __)))
+ (?= one-tuple (<- [?x]
+                   (one-tuple __)))
 
  "The name itself doesn't matter, just that it match."
- (?= one-tuple (<- [__] (one-tuple __))))
+ (?= one-tuple (<- [__]
+                   (one-tuple __))))

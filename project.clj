@@ -1,5 +1,6 @@
-(defproject cascalog-koans "0.4.5"
-  :description "Koans for Cascalog."
+(defproject cascalog-koan-engine "0.1.0"
+  :description "Koan Engine for Clojure projects."
+  :main koan-engine.core
   :dependencies [[org.clojure/clojure "1.3.0"]
                  [cascalog "1.8.4"]
                  [fresh "1.0.2"]
