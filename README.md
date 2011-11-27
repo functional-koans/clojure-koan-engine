@@ -13,8 +13,8 @@
 These need better description; these can be set for every koan project.
 
     :koan {:koan-root "src/koans"     ;; koan files live at this root
-           :dojo-resource "dojo"      ;; All koans are evaluated within the namespace defined in resources/dojo.clj.
-           :koan-resource "koans"}    ;; koans at resources/koans.clj 
+           :dojo-resource "dojo.clj"      ;; The forms in resources/dojo.clj are evaluted before every koan.
+           :koan-resource "koans.clj"}    ;; answers located at resources/koans.clj 
 
 ### resources/dojo.clj
 
