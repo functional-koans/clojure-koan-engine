@@ -5,14 +5,13 @@
 
 ;; TODO: Incorporate each of these custom options in the runner.
 ;; koan-root:       check!
-;; dojo-resource:   NOPE
+;; dojo-resource:   check!
 ;; answer-resource: NOPE
 ;; koan-resource:   NOPE
 
 (def default-koan-map
   {:koan-root "src/koans"
    :dojo-resource "dojo.clj"
-   :answer-resource "answers.clj"
    :koan-resource "koans.clj"})
 
 ;; TODO: Run validations on koan-map.

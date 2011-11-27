@@ -22,9 +22,8 @@
                        (concat (map pr-str replacements)
                                (repeat k)))))))
 
-;; TODO: Get path from root in resources directory.
-(defn koan-text [koan]
-  (slurp (str "src/koans/" koan ".clj")))
+(defn koan-text [koan-root koan]
+  (slurp (str koan-root "/" koan ".clj")))
 
 (defn answers-for [koan sym]
   ((answers koan {}) sym []))
@@ -48,10 +47,10 @@
                    pairs)]
     `(do ~@tests)))
 
-(defn ensure-failing-without-answers [dojo-path]
+(defn ensure-failing-without-answers [koan-root dojo-path]
   (if (every?
        (fn [koan]
-         (let [form (koan-text koan)
+         (let [form (koan-text koan-root koan)
                form (string/replace form "(meditations" "(ensure-failure")
                fake-err (java.io.PrintStream. (java.io.ByteArrayOutputStream.))
                real-err System/err
@@ -66,12 +65,12 @@
        ordered-koans)
     (println "\nTests all fail before the answers are filled in.")))
 
-(defn ensure-passing-with-answers [dojo-path]
+(defn ensure-passing-with-answers [koan-root dojo-path]
   (try (dorun
         (map
          (fn [koan]
            (with-dojo [dojo-path]
-             (load-string (-> (koan-text koan)
+             (load-string (-> (koan-text koan-root koan)
                               (fill-in-answers koan "__")
                               (fill-in-answers koan "___")))))
          ordered-koans))
@@ -81,6 +80,6 @@
          (.printStackTrace e)
          (println "Answer sheet fail"))))
 
-(defn test [{:keys [dojo-resource]}]
-  (ensure-failing-without-answers dojo-resource)
-  (ensure-passing-with-answers dojo-resource))
+(defn test [{:keys [dojo-resource koan-root]}]
+  (ensure-failing-without-answers koan-root dojo-resource)
+  (ensure-passing-with-answers koan-root dojo-resource))
