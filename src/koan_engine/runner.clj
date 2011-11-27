@@ -10,7 +10,7 @@
 
 ;; TODO: Run validations on koan-map.
 ;; Do all resources exist? Does this matter?
-(defn -main [task]
+(defn exec [task]
   (u/require-version (u/parse-required-version))
   (let [koan-map (merge default-koan-map
                         (:koan (u/read-project)))]
