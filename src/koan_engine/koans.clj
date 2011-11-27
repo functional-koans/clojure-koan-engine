@@ -3,28 +3,19 @@
   (:require [koan-engine.util :as u]))
 
 ;; TODO: Proper koan validation. Accept the path as an argument.
-(defn ordered-koans []
-  (if-let [conf-path (resource "koans.clj")]
-    (try (let [conf (-> conf-path slurp read-string)]
-           (u/safe-assert (map? conf) "Koans aren't valid!")
-           conf)
-         (catch RuntimeException e
-           (throw (Exception. "Error reading job-conf.clj!\n\n") e)))
-    {}))
+(defn ordered-koans [answer-path]
+  (map first (u/try-read (resource answer-path))))
 
-(def ordered-koans
-  ["tuples"])
-
-(defn ordered-koan-paths  []
+(defn ordered-koan-paths [koan-root answer-path]
   (map (fn [koan-name]
-         (.getCanonicalPath (file "src" "koans" (str koan-name ".clj"))))
-       ordered-koans))
+         (.getCanonicalPath (file koan-root (str koan-name ".clj"))))
+       (ordered-koans answer-path)))
 
 (defn among-paths? [files]
   (into #{} (map #(.getCanonicalPath %) files)))
 
-(defn next-koan-path [last-koan-path]
-  (loop [[this-koan & more :as koan-paths] (ordered-koan-paths)]
+(defn next-koan-path [koan-path-seq last-koan-path]
+  (loop [[this-koan & more :as koan-paths] koan-path-seq]
     (when (seq more)
       (if (= last-koan-path this-koan)
         (first more)

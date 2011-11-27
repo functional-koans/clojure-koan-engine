@@ -52,6 +52,9 @@
                             ('org.clojure/clojure))]
     (map read-string (take 3 (s/split version-string #"[\.\-]")))))
 
+(defn try-read [path]
+  (when path (read-string (slurp path))))
+
 (defmacro do-isolated [& forms]
   `(binding [*ns* (create-ns (gensym "jail"))]
      (refer 'clojure.core)

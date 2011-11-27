@@ -3,19 +3,13 @@
   (:require [koan-engine.util :as u]
             [koan-engine.checker :as checker]))
 
-;; TODO: Incorporate each of these custom options in the runner.
-;; koan-root:       check!
-;; dojo-resource:   check!
-;; answer-resource: NOPE
-;; koan-resource:   NOPE
-
 (def default-koan-map
   {:koan-root "src/koans"
    :dojo-resource "dojo.clj"
    :koan-resource "koans.clj"})
 
 ;; TODO: Run validations on koan-map.
-;; Do all resources exist?
+;; Do all resources exist? Does this matter?
 (defn -main [task]
   (u/require-version (u/parse-required-version))
   (let [koan-map (merge default-koan-map

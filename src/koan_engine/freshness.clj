@@ -12,23 +12,25 @@
   (constantly
    (clj-files-in (file koan-root))))
 
-(defn report-refresh [dojo-path report]
+(defn report-refresh [opt-map report]
   (when-let [refreshed-files (seq (:reloaded report))]
-    (let [these-koans (filter
-                       (among-paths? refreshed-files)
-                       (ordered-koan-paths))]
-      (when (every? (partial tests-pass? dojo-path)
+    (let [{:keys [dojo-resource koan-resource koan-root]} opt-map
+          path-seq    (ordered-koan-paths koan-root koan-resource)
+          these-koans (filter (among-paths? refreshed-files)
+                              path-seq)]
+      (when (every? (partial tests-pass? dojo-resource)
                     these-koans)
-        (if-let [next-koan-file (file (next-koan-path (last these-koans)))]
+        (if-let [next-koan-file (file (next-koan-path path-seq
+                                                      (last these-koans)))]
           (report-refresh {:reloaded [next-koan-file]})
           (namaste))))
     (println))
   :refreshed)
 
 (defn refresh!
-  [{:keys [koan-root dojo-resource]}]
+  [{:keys [koan-root] :as opts}]
   (freshener (files-to-keep-fresh koan-root)
-             (partial report-refresh dojo-resource)))
+             (partial report-refresh opts)))
 
 (def scheduler (ScheduledThreadPoolExecutor. 1))
 
