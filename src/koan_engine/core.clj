@@ -1,7 +1,6 @@
 (ns koan-engine.core
   (:use [cascalog.testing :only (test?-)]
-        [cascalog.util :only (defalias)]
-        [koan-engine.freshness :only [setup-freshener]])
+        [cascalog.util :only (defalias)])
   (:require [koan-engine.util :as u]))
 
 (def __ :fill-in-the-blank)
@@ -21,7 +20,3 @@
                      `(u/fancy-assert ~code# ~doc#))
                    pairs)]
     `(do ~@tests)))
-
-(defn -main []
-  (u/require-version (u/parse-required-version))
-  (setup-freshener))

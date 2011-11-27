@@ -1,4 +1,4 @@
-(load "koan_engine/checker")
+(load "koan_engine/core")
 (do
-  (in-ns 'koan-engine.checker)
-  (run))
+  (in-ns 'koan-engine.runner)
+  (-main "test"))

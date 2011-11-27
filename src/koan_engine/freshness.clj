@@ -9,8 +9,9 @@
                                   tests-pass?]])
   (:import [java.util.concurrent ScheduledThreadPoolExecutor TimeUnit]))
 
-(defn files-to-keep-fresh []
-  (clj-files-in (file "src" "koans")))
+(defn files-to-keep-fresh [koan-root]
+  (constantly
+   (clj-files-in (file koan-root))))
 
 (defn report-refresh [report]
   (when-let [refreshed-files (seq (:reloaded report))]
@@ -24,11 +25,15 @@
     (println))
   :refreshed)
 
-(def refresh! (freshener files-to-keep-fresh report-refresh))
+(defn refresh! [{:keys [koan-root]}]
+  (freshener (files-to-keep-fresh koan-root)
+             report-refresh))
 
 (def scheduler (ScheduledThreadPoolExecutor. 1))
 
-(defn setup-freshener []
+(defn setup-freshener [koan-map]
   (println "Starting auto-runner...")
-  (.scheduleWithFixedDelay scheduler refresh! 0 500 TimeUnit/MILLISECONDS)
+  (.scheduleWithFixedDelay scheduler
+                           (refresh! koan-map)
+                           0 500 TimeUnit/MILLISECONDS)
   (.awaitTermination scheduler Long/MAX_VALUE TimeUnit/SECONDS))

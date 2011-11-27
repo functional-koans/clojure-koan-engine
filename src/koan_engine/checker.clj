@@ -1,4 +1,5 @@
 (ns koan-engine.checker
+  (:refer-clojure :exclude [test])
   (:use cascalog.api
         [koan-engine.koans :only [ordered-koans]]
         [koan-engine.core :only [meditations ?= __ ___]]
@@ -8,7 +9,6 @@
 ;; TODO: Use cascalog.api elsewhere.
 ;; TODO: add ?= back in somewhere!
 ;; TODO: Move out into resources directory!
-
 (def answers
   {"tuples" {"__" [[["truth."]]
                    [[1]]
@@ -89,6 +89,6 @@
       (.printStackTrace e)
       (println "Answer sheet fail"))))
 
-(defn run []
+(defn test []
   (ensure-failing-without-answers)
   (ensure-passing-with-answers))

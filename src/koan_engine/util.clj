@@ -36,14 +36,16 @@
              (throw (Exception. (str '~message "\n" '~x )
                                 e#))))))
 
-(defn parse-required-version []
+(defn read-project []
   (let [rdr (clojure.lang.LineNumberingPushbackReader.
-             (java.io.FileReader. (java.io.File. "project.clj")))
-        project-form (read rdr)
-        version-string (->> project-form
-                            (drop 3)
-                            (apply hash-map)
-                            :dependencies
+             (java.io.FileReader. (java.io.File. "project.clj")))]
+    (->> (read rdr)
+         (drop 3)
+         (apply hash-map))))
+
+(defn parse-required-version []
+  (let [{deps :dependencies} (read-project)
+        version-string (->> deps
                             (map (fn [xs] (vec (take 2 xs))))
                             (into {})
                             ('org.clojure/clojure))]
