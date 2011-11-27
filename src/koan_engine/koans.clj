@@ -32,10 +32,7 @@
         (recur more)))))
 
 (defn tests-pass? [file-path]
-  (binding [*ns* (create-ns (gensym "koans"))]
-    (refer 'clojure.core)
-    (use 'cascalog.api) ;; TODO: Move out other namespace.
-    (use '[koan-engine.core :only [meditations ?= __ ___]])
+  (u/with-dojo ["dojo.clj"]
     (try (load-file file-path)
          true
          (catch Exception e

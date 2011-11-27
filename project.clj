@@ -9,6 +9,6 @@
                       :exclusions [org.clojure/clojure]]]
   :main koan-engine.runner
   :koan {:koan-root "src/koans"
-         :dojo-resource "dojo"
-         :answer-resource "answers"
-         :koan-resource "koans"})
+         :dojo-resource "dojo.clj"
+         :answer-resource "answers.clj"
+         :koan-resource "koans.clj"})

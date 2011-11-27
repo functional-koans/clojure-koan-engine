@@ -1,5 +1,6 @@
 (ns koan-engine.util
-  (:require [clojure.string :as s]))
+  (:require [clojure.string :as s]
+            [clojure.java.io :as io]))
 
 (defn version<
   "< for Clojure's version map."
@@ -50,3 +51,17 @@
                             (into {})
                             ('org.clojure/clojure))]
     (map read-string (take 3 (s/split version-string #"[\.\-]")))))
+
+(defmacro do-isolated [& forms]
+  `(binding [*ns* (create-ns (gensym "jail"))]
+     (refer 'clojure.core)
+     ~@forms))
+
+(defmacro with-dojo [[dojo-path] & body]
+  `(let [dojo# (when-let [dojo# (clojure.java.io/resource ~dojo-path)]
+                 (read-string (format "(do %s)" (slurp dojo#))))]
+     (do-isolated
+      (use '~'[koan-engine.core :only [meditations __ ___]]
+           '~'[koan-engine.checker :only [ensure-failure]])
+      (eval dojo#)
+      ~@body)))
