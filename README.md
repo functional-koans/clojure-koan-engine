@@ -40,69 +40,6 @@ The plugin makes two tasks available:
 `lein koan run` watches koan files for changes and presents the user with the most advanced unsolved koan.
 `lein koan test` checks that all koans fail without answers and pass with answers.
 
-
-### Adding Koans
-
-Koans live by default in the `src/koans` directory. (See "Customizations" below to change this.) To create a set of clojure koans about equality, you would add the following forms to `src/koans/equality.clj`:
-
-```clojure
-(defn truthy? [x] (boolean x))
-
-(meditations
-  "We shall contemplate truth by testing reality, via equality."
-  (= __ true)
-
-  "Non-boolean values have a sense of truthiness about them."
-  (= __ (truthy? "cake")))
-```
-
-First come any definitions you want to use in your koans, followed by a call to the `meditations` macro with any number of koans.
-
-Each koan consists of:
-
-- a descriptive string
-- a code form containing blanks (`__`).
-
-The student' job is to fill in the blanks in such a way that the code form throws no exceptions and returns a truthy value.
-
-
-### Defining Solutions
-
-To run properly every set of koans must maintain an entry in the `:koan-resource` file, located by default at `resources/koans.clj`. The koan-resource file contains a vector of 2-vectors, with each of these holding a koan name and map of answers:
-
-```clojure
-[["equality" {"__" [true
-                    true]}]
- ["atoms"    {"__" ["jail"]}]
-]
-```
-
-The answer values are substituted into the koan file in the order they appear. `lein koan test` will check that every koan fails without and passes with answer substitution.
-
-
-### The Dojo
-
-By default, koans are executed in a bare namespace with `clojure.core`, the `meditations` macro, and the `__` and `___` symbols. Most koan projects will need to customize this namespace to make APIs and custom functions available.
-
-To do this, simply add code forms to `resources/dojo.clj`. Each of these forms will be evaluated before every koan. Here's the dojo for the [Cascalog-Koans](https://github.com/sritchie/cascalog-koans):
-
-    ;; in resources/dojo.clj
-    (use 'cascalog.api
-         '[cascalog.testing :only (test?-)]
-         '[cascalog.util :only (defalias)])
-    
-    (defalias ?= test?-)
-
-This dojo makes the cascalog API available, along with a custom equality operator that doesn't exist in the API but made koans very concise. Now koans of this form will run just fine:
-
-    "Some queries transform nothing."
-    (?= __ (<- [?x] ([["tuple."]] ?x))
-
-You can customize the `:dojo-resource` sub-path and name inside of `resources` by tweaking its entry in `project.clj`, as discussed above:
-
-    :koan {:dojo-resource "helpers/dojo_file.clj"} ;; dojo located at resources/helpers/dojo_file.clj
-
-
 ## Customizations
 
 The koan engine looks for koans under `src/koans` by default, but you can customize this by adding a `:koan` entry to `project.clj`. All options are shown here along with defaults:
@@ -110,6 +47,8 @@ The koan engine looks for koans under `src/koans` by default, but you can custom
     :koan {:koan-root "src/koans"      ;; koan files live at this root
            :dojo-resource "dojo.clj"   ;; The forms in resources/dojo.clj are evaluted before every koan.
            :koan-resource "koans.clj"} ;; answers located at resources/koans.clj 
+
+For more information on the Dojo see [the wiki page](https://github.com/functional-koans/clojure-koan-engine/wiki/The-Dojo).  ["How to write Koans"](https://github.com/functional-koans/clojure-koan-engine/wiki/How-to-write-koans) provides more information on how to add your own koans and answers.
 
 ### License
 
