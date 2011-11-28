@@ -4,7 +4,7 @@
 
 ;; TODO: Proper koan validation. Accept the path as an argument.
 (defn ordered-koans [answer-path]
-  (map first (u/try-read (resource answer-path))))
+  (map first (u/try-read (.getPath (resource answer-path)))))
 
 (defn ordered-koan-paths [koan-root answer-path]
   (map (fn [koan-name]

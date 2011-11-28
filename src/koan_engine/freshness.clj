@@ -22,7 +22,7 @@
                     these-koans)
         (if-let [next-koan-file (file (next-koan-path path-seq
                                                       (last these-koans)))]
-          (report-refresh {:reloaded [next-koan-file]})
+          (report-refresh opt-map {:reloaded [next-koan-file]})
           (namaste))))
     (println))
   :refreshed)
