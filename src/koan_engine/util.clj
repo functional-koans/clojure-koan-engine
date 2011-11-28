@@ -1,6 +1,7 @@
 (ns koan-engine.util
   (:require [clojure.string :as s]
-            [clojure.java.io :as io]))
+            [clojure.java.io :as io])
+  (:import [java.net URLDecoder]))
 
 (defn version<
   "< for Clojure's version map."
@@ -53,7 +54,7 @@
     (map read-string (take 3 (s/split version-string #"[\.\-]")))))
 
 (defn try-read [path]
-  (when path (read-string (slurp path))))
+  (when path (read-string (slurp (URLDecoder/decode path)))))
 
 (defmacro do-isolated [& forms]
   `(binding [*ns* (create-ns (gensym "jail"))]

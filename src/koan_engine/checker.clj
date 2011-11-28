@@ -6,7 +6,7 @@
   (:require [koan-engine.util :as u]))
 
 (defn mk-answers [koan-resource]
-  (into {} (u/try-read (resource koan-resource))))
+  (into {} (u/try-read (.getPath (resource koan-resource)))))
 
 (defn replace-with [s k replacements]
   (let [unreplaced-texts (split s (re-pattern (str "\\b" k "\\b")))]
