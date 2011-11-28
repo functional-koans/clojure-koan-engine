@@ -1,6 +1,6 @@
 (ns koan-engine.checker
   (:refer-clojure :exclude [test])
-  (:use [clojure.java.io :only (resource)]
+  (:use [clojure.java.io :only (file resource)]
         [koan-engine.koans :only [ordered-koans]]
         [clojure.string :only [join split trim] :as string])
   (:require [koan-engine.util :as u]))
@@ -16,7 +16,7 @@
                                (repeat k)))))))
 
 (defn koan-text [koan-root koan]
-  (slurp (str koan-root "/" koan ".clj")))
+  (slurp (file koan-root (str koan ".clj"))))
 
 (defn answers-for [koan-resource koan sym]
   (let [answers (mk-answers koan-resource)]
