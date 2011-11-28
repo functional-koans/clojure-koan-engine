@@ -44,9 +44,11 @@ The plugin makes two tasks available:
 
 The koan engine looks for koans under `src/koans` by default, but you can customize this by adding a `:koan` entry to `project.clj`. All options are shown here along with defaults:
 
-    :koan {:koan-root "src/koans"      ;; koan files live at this root
-           :dojo-resource "dojo.clj"   ;; The forms in resources/dojo.clj are evaluted before every koan.
-           :koan-resource "koans.clj"} ;; answers located at resources/koans.clj 
+```clojure
+:koan {:koan-root "src/koans"      ;; koan files live at this root
+       :dojo-resource "dojo.clj"   ;; The forms in resources/dojo.clj are evaluted before every koan.
+       :koan-resource "koans.clj"} ;; answers located at resources/koans.clj 
+```
 
 For more information on the Dojo see [the wiki page](https://github.com/functional-koans/clojure-koan-engine/wiki/The-Dojo).  ["How to write Koans"](https://github.com/functional-koans/clojure-koan-engine/wiki/How-to-write-koans) provides more information on how to add your own koans and answers.
 
