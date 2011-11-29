@@ -19,7 +19,7 @@ Koans are a wonderful way to teach users by example. If you maintain or use a li
 The easiest way to start writing koans for your library is to generate a new project with the `koan-template` leiningen plugin (source code [on github](https://github.com/functional-koans/koan-template). Make sure you have [Leiningen](http://github.com/technomancy/leiningen) installed, then run the following commands:
 
     lein plugin install lein-newnew 0.1.2   # Skip if you already have lein-newnew installed!
-    lein plugin install koan-template 0.1.0
+    lein plugin install koan-template 0.1.1
     lein new koan <your-project-name>
     cd <your-project-name>
     chmod +x script/*
@@ -33,7 +33,7 @@ You can also add koans to an existing library without interfering with your sour
 
 To get started, add the `lein-koan` plugin (source code [on github](https://github.com/functional-koans/koan-template) ) to your `:dev-dependencies` in `project.clj`:
 
-    [lein-koan "0.1.0"]
+    [lein-koan "0.1.1"]
 
 The plugin makes two tasks available:
 
