@@ -31,7 +31,7 @@ The README of the resulting project will contain everything your users need to k
 
 You can also add koans to an existing library without interfering with your source tree. This is a wonderful way to introduce users to your source code.
 
-To get started, add the `lein-koan` plugin (source code [on github](https://github.com/functional-koans/koan-template)) to your `:dev-dependencies` in `project.clj`:
+To get started, add the `lein-koan` plugin (source code [on github](https://github.com/functional-koans/koan-template) ) to your `:dev-dependencies` in `project.clj`:
 
     [lein-koan "0.1.0"]
 
