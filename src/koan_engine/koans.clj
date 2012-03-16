@@ -23,8 +23,12 @@
 
 (defn tests-pass? [dojo-path file-path]
   (u/with-dojo [dojo-path]
+    (print "Considering" file-path "...")
+    (flush)
     (try (load-file file-path)
-         true
+         (do
+           (println "ok")
+           true)
          (catch Exception e
            (println)
            (let [actual-error (or (.getCause e) e)
