@@ -34,7 +34,7 @@
   ([x] (fancy-assert x ""))
   ([x message]
      `(try (safe-assert ~x ~message)
-           (catch Exception e#
+           (catch Throwable e#
              (throw (Exception. (str '~message "\n" '~x )
                                 e#))))))
 
