@@ -14,7 +14,7 @@ The student' job is to fill in the blanks in such a way that the code form throw
 
 ## Writing your own koans
 
-Koans are a wonderful way to teach users by example. If you maintain or use a library in Clojure, consider putting together a custom Koan project! 
+Koans are a wonderful way to teach users by example. If you maintain or use a library in Clojure, consider putting together a custom Koan project!
 
 The easiest way to start writing koans for your library is to generate a new project with the `koan-template` leiningen plugin (source code [on github](https://github.com/functional-koans/koan-template). Make sure you have [Leiningen](http://github.com/technomancy/leiningen) installed, then run the following commands:
 
@@ -33,7 +33,7 @@ You can also add koans to an existing library without interfering with your sour
 
 To get started, add the `lein-koan` plugin (source code [on github](https://github.com/functional-koans/koan-template) ) to your `:dev-dependencies` in `project.clj`:
 
-    [lein-koan "0.1.1"]
+    [lein-koan "0.1.2"]
 
 The plugin makes two tasks available:
 
@@ -47,7 +47,7 @@ The koan engine looks for koans under `src/koans` by default, but you can custom
 ```clojure
 :koan {:koan-root "src/koans"      ;; koan files live at this root
        :dojo-resource "dojo.clj"   ;; The forms in resources/dojo.clj are evaluted before every koan.
-       :koan-resource "koans.clj"} ;; answers located at resources/koans.clj 
+       :koan-resource "koans.clj"} ;; answers located at resources/koans.clj
 ```
 
 For more information on the Dojo see [the wiki page](https://github.com/functional-koans/clojure-koan-engine/wiki/The-Dojo).  ["How to write Koans"](https://github.com/functional-koans/clojure-koan-engine/wiki/How-to-write-koans) provides more information on how to add your own koans and answers.
