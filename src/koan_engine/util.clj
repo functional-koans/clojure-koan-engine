@@ -35,7 +35,9 @@
   ([x message]
      `(try (safe-assert ~x ~message)
            (catch Throwable e#
-             (throw (Exception. (str '~message "\n" '~x )
+             (throw (Exception. (str ~(when-let [line (:line (meta x))]
+                                        (str "[LINE " line "] "))
+                                     '~message "\n" '~x)
                                 e#))))))
 
 (defn read-project []

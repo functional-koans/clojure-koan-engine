@@ -27,13 +27,22 @@
          true
          (catch Exception e
            (println)
-           (println "Problem in" file-path)
-           (println "---------------------")
-           (println "Assertion failed!")
            (let [actual-error (or (.getCause e) e)
                  message (or (.getMessage actual-error)
-                             (.toString actual-error))]
-             (println (.replaceFirst message "^Assert failed: " "")))
+                             (.toString actual-error))
+                 ; TODO: use ex-info or something to clean this up, once we're
+                 ; upgraded to clojure 1.4+
+                 line (when-let [groups (first (re-seq #"^\[LINE (\d+)\] "
+                                                       message))]
+                        (last groups))]
+             (println "Problem in"
+                      (str file-path
+                           (when line (str ":" line))))
+             (println "---------------------")
+             (println "Assertion failed!")
+             (println (.replaceFirst
+                        (.replaceFirst message "^Assert failed: " "")
+                        "^\\[LINE \\d+\\] " "")))
            false))))
 
 (defn namaste []
