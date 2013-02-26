@@ -23,12 +23,10 @@
 
 (defn tests-pass? [dojo-path file-path]
   (u/with-dojo [dojo-path]
-    (print "Considering" file-path "...")
+    (print "Considering" (str file-path "..."))
     (flush)
     (try (load-file file-path)
-         (do
-           (println "ok")
-           true)
+         (do (println) true)
          (catch Exception e
            (println)
            (let [actual-error (or (.getCause e) e)
@@ -39,7 +37,7 @@
                  line (when-let [groups (first (re-seq #"^\[LINE (\d+)\] "
                                                        message))]
                         (last groups))]
-             (println "Problem in"
+             (println "\nNow meditate upon"
                       (str file-path
                            (when line (str ":" line))))
              (println "---------------------")
