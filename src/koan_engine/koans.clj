@@ -24,16 +24,13 @@
 (defn tests-pass? [dojo-path file-path]
   (u/with-dojo [dojo-path]
     (print "Considering" (str file-path "..."))
+    (println)
     (flush)
     (try (load-file file-path)
-         (do (println) true)
-         (catch Exception e
-           (println)
-           (let [actual-error (or (.getCause e) e)
-                 message (or (.getMessage actual-error)
-                             (.toString actual-error))
-                 ; TODO: use ex-info or something to clean this up, once we're
-                 ; upgraded to clojure 1.4+
+         true
+         (catch Throwable e
+           (let [message (or (.getMessage e) (.toString e))
+                 ; TODO: use ex-info or something to clean this up
                  line (when-let [groups (first (re-seq #"^\[LINE (\d+)\] "
                                                        message))]
                         (last groups))]
