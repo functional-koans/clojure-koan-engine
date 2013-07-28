@@ -38,11 +38,13 @@
   [x] {
        :expected (try (eval (second x))
                       (catch Throwable e#
-                        "Evaluation error")),
+                        (str 
+                          "Evaluation error -- " (.getMessage e#)))),
 
        :actual (try (eval (nth x  2))
                     (catch Throwable e#
-                      "Evaluation error"))
+                      (str 
+                        "Evaluation error -- " (.getMessage e#))))
        })
 
 (defn expectations_to_s
