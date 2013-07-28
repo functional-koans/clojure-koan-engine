@@ -29,6 +29,32 @@
        `(assert ~x)
        `(assert ~x ~msg))))
 
+(defn expectations
+  "Given an equality form (= expected actual) returns the hash-map 
+  -- { exepected: expected-result,
+       actual: actual-result }"
+  ;TODO Check that x is an equality form.
+  ;TODO Handle more than two arguments.
+  [x] {
+       :expected (try (eval (second x))
+                      (catch Throwable e#
+                        "Evaluation error")),
+
+       :actual (try (eval (nth x  2))
+                    (catch Throwable e#
+                      "Evaluation error"))
+       })
+
+(defn expectations_to_s
+  "Given the results of fn(expectations) returns as formatted string
+  with epected and actual restuls."
+  [results](str
+       "\n-------------\n"
+       "expected: " (:expected results) "\n"
+       "actual: " (:actual results)) )
+       "\n-------------\n"
+
+
 (defmacro fancy-assert
   "Assertion with fancy error messaging."
   ([x] (fancy-assert x ""))
@@ -37,7 +63,8 @@
            (catch Throwable e#
              (throw (Exception. (str ~(when-let [line (:line (meta x))]
                                         (str "[LINE " line "] "))
-                                     '~message "\n" '~x)))))))
+                                     '~message "\n" '~x "\n"
+                                     (expectations_to_s (expectations '~x)))))))))
 
 (defn read-project []
   (let [rdr (clojure.lang.LineNumberingPushbackReader.
