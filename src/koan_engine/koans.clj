@@ -42,7 +42,7 @@
              (println (.replaceFirst
                         (.replaceFirst message "^Assert failed: " "")
                         "^\\[LINE \\d+\\] " "")))
-           false))))
+           (System/exit 0)))))
 
 (defn namaste []
   (println "\nYou have achieved clojure enlightenment. Namaste."))
