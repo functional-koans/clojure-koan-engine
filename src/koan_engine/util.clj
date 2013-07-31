@@ -4,8 +4,8 @@
             [clojure.java.io :as io])
   (:import [java.net URLDecoder]))
 
-(declare get-evaluation-errors-proxy answered?
-         print-errors-string get-evaluation-errors)
+(declare get-evaluation-errors-proxy answered? print-evaluation-error-string)
+
 (defn version<
   "< for Clojure's version map."
   [v1 v2]
@@ -41,55 +41,31 @@
              (throw (Exception. (str ~(when-let [line (:line (meta x))]
                                         (str "[LINE " line "] "))
                                      '~message "\n" '~x "\n"
-                                     (get-evaluation-errors-proxy '~x))))))))
+                                     (get-evaluation-errors-proxy '~x e#))))))))
 
 (defn get-evaluation-errors-proxy
-  "Given a quoted equality form, retrieves any evaluation errors
-  in the different parts of the form, and returns them as a string. 
-  May return an empty string."
-  [form] (if
-           (and 
-             (answered? form)
-             ; Protect against a future failure if a koan uses something
-             ; other than the equality form for the assertion.
-             (= "=" (str (first form))))
-           (print-errors-string (get-evaluation-errors form)) 
-           ""))
+  "Checks that an attempt has been made to answer the koan before returning
+  the error message string."
+  [koan error]
+  (if
+    (answered? koan)
+    (print-evaluation-error-string error) 
+    ""))
 
 (defn answered?
   "Returns true if an attempt has been made to answer the koan
   or false otherwise."
-  [form] (not (contains? 
-          (split (str form) #"\s+") "__")))
+  [koan]
+  (not (contains? 
+         (split (str koan) #"\s+") "__")))
 
-(defn print-errors-string
-  "Given the results of get-evaluation-errors[] returns as formatted string."
-  [results] (if (= 0 (count results))
-              ""
-              (str
-                "\n-------------\n"
-                (loop [n 0
-                       results results
-                       s ""]
-                  (if (= n (count results))
-                    s
-                    (recur (inc n) results (str s (nth results n "No errors."))))))))
+(defn print-evaluation-error-string
+  "Formats and returns the koan evaluation error message."
+  [error]
+  (str
+    "\n-------------\n"
+    "Error: " (.getMessage error)))
 
-(defn get-evaluation-errors
-  "Iterates over the the part of an equality form and evaluates each in turn.
-  Returns a list of evaluation errors if any; an empty list otherwise."
-  ([form] (get-evaluation-errors form 1 []))
-  ([form n errors] 
-   (if (= n (count form))
-     errors
-     ; Cannot use loop/recur form here because recur is not allowed
-     ; across the try/catch form.
-     (try 
-       (eval (nth form n))
-       (get-evaluation-errors form (inc n) errors)
-       (catch Throwable e#
-         (get-evaluation-errors form (inc n)
-                            (conj errors (str "Part-" n " Error: " (.getMessage e#)))))))))
 
 (defn read-project []
   (let [rdr (clojure.lang.LineNumberingPushbackReader.
