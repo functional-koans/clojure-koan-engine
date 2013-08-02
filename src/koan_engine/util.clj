@@ -56,8 +56,7 @@
   "Returns true if an attempt has been made to answer the koan
   or false otherwise."
   [koan]
-  (not (contains? 
-         (split (str koan) #"\s+") "__")))
+  (not-any? #{"__"} (split (str koan) #"\s+")))
 
 (defn print-evaluation-error-string
   "Formats and returns the koan evaluation error message."
