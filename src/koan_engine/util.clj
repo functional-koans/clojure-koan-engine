@@ -1,7 +1,11 @@
 (ns koan-engine.util
+  (::use [clojure.string :only  [split]])
   (:require [clojure.string :as s]
             [clojure.java.io :as io])
   (:import [java.net URLDecoder]))
+
+(declare get-evaluation-errors-proxy answered?
+         evaluation? print-evaluation-error-string)
 
 (defn version<
   "< for Clojure's version map."
@@ -37,7 +41,36 @@
            (catch Throwable e#
              (throw (Exception. (str ~(when-let [line (:line (meta x))]
                                         (str "[LINE " line "] "))
-                                     '~message "\n" '~x)))))))
+                                     '~message "\n" '~x "\n"
+                                     (get-evaluation-errors-proxy '~x e#))))))))
+
+(defn get-evaluation-errors-proxy
+  "Checks that an attempt has been made to answer the koan before returning
+  the error message string."
+  [koan error]
+  (if
+    (and (answered? koan) (evaluation? error))
+    (print-evaluation-error-string error) 
+    ""))
+
+(defn answered?
+  "Returns true if an attempt has been made to answer the koan
+  or false otherwise."
+  [koan]
+  (not-any? #{"__"} (split (str koan) #"\s+")))
+
+(defn evaluation?
+  "Verify that the error is not a mere assertion failure."
+  [error]
+  (not-any? #{"Assert"} (split (.getMessage error) #"\s+")))
+
+(defn print-evaluation-error-string
+  "Formats and returns the koan evaluation error message."
+  [error]
+  (str
+    "\n-------------\n"
+    "Error: " (.getMessage error)))
+
 
 (defn read-project []
   (let [rdr (clojure.lang.LineNumberingPushbackReader.
