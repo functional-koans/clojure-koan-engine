@@ -33,7 +33,7 @@
   "Assertion with fancy error messaging."
   ([x] (fancy-assert x ""))
   ([x message]
-     `(try (safe-assert ~x ~message)
+     `(try (safe-assert (= true ~x) ~message)
            (catch Throwable e#
              (throw (ex-info (str '~message "\n" '~x)
                              {:line (:line (meta '~x))}))))))
