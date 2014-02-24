@@ -21,6 +21,15 @@
         (first more)
         (recur more)))))
 
+(defn report-error [file-path line error]
+  (let [message (or (.getMessage error) (.toString error))]
+    (println "\nNow meditate upon"
+             (str file-path
+                  (when line (str ":" line))))
+    (println "---------------------")
+    (println "Assertion failed!")
+    (println (.replaceFirst message "^Assert failed: " ""))))
+
 (defn tests-pass? [dojo-path file-path]
   (u/with-dojo [dojo-path]
     (print "Considering" (str file-path "..."))
@@ -28,20 +37,12 @@
     (flush)
     (try (load-file file-path)
          true
+         (catch clojure.lang.ExceptionInfo ei
+           (report-error file-path (:line (ex-data ei)) ei)
+           false)
          (catch Throwable e
-           (let [message (or (.getMessage e) (.toString e))
-                 ; TODO: use ex-info or something to clean this up
-                 line (when-let [groups (first (re-seq #"^\[LINE (\d+)\] "
-                                                       message))]
-                        (last groups))]
-             (println "\nNow meditate upon"
-                      (str file-path
-                           (when line (str ":" line))))
-             (println "---------------------")
-             (println "Assertion failed!")
-             (println (.replaceFirst
-                        (.replaceFirst message "^Assert failed: " "")
-                        "^\\[LINE \\d+\\] " "")))
+
+             (report-error file-path nil e)
            false))))
 
 (defn namaste []

@@ -35,9 +35,8 @@
   ([x message]
      `(try (safe-assert ~x ~message)
            (catch Throwable e#
-             (throw (Exception. (str ~(when-let [line (:line (meta x))]
-                                        (str "[LINE " line "] "))
-                                     '~message "\n" '~x)))))))
+             (throw (ex-info (str '~message "\n" '~x)
+                             {:line (:line (meta '~x))}))))))
 
 (defn read-project []
   (let [rdr (clojure.lang.LineNumberingPushbackReader.
