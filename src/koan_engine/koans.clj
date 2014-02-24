@@ -41,8 +41,7 @@
            (report-error file-path (:line (ex-data ei)) ei)
            false)
          (catch Throwable e
-
-             (report-error file-path nil e)
+           (report-error file-path nil e)
            false))))
 
 (defn namaste []
