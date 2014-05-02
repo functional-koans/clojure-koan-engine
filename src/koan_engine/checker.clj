@@ -16,8 +16,7 @@
                                (repeat k)))))))
 
 (defn koan-text [koan-root koan]
-  (let [text (slurp (file koan-root (str koan ".clj")))]
-    (string/replace text #"(?s).*(?=\(meditations)" "")))
+  (slurp (file koan-root (str koan ".clj"))))
 
 (defn answers-for [koan-resource koan sym]
   (let [answers (mk-answers koan-resource)]
@@ -47,10 +46,13 @@
     (when (every?
            (fn [koan]
              (let [form (koan-text koan-root koan)
-                   form (string/replace form "(meditations" "(ensure-failure")
+                   form (string/replace form
+                                        "(meditations"
+                                        "(koan-engine.checker/ensure-failure")
                    fake-err (java.io.PrintStream. (java.io.ByteArrayOutputStream.))
                    real-err System/err
                    result (try (u/with-dojo [dojo-resource]
+                                 (require 'koan-engine.checker)
                                  (load-string form))
                                true
                                (catch AssertionError e (prn e) false)
