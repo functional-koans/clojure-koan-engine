@@ -16,7 +16,8 @@
                                (repeat k)))))))
 
 (defn koan-text [koan-root koan]
-  (slurp (file koan-root (str koan ".clj"))))
+  (let [text (slurp (file koan-root (str koan ".clj")))]
+    (string/replace text #"(?s)\(ns.*koan-engine\.core\)\)" "")))
 
 (defn answers-for [koan-resource koan sym]
   (let [answers (mk-answers koan-resource)]
