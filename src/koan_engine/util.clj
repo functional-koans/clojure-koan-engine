@@ -33,10 +33,11 @@
   "Assertion with fancy error messaging."
   ([x] (fancy-assert x ""))
   ([x message]
-     `(try (safe-assert (= true ~x) ~message)
-           (catch Throwable e#
-             (throw (ex-info (str '~message "\n" '~x)
-                             {:line (:line (meta '~x))}))))))
+     `(try
+        (safe-assert (= true ~x) ~message)
+        (catch Throwable e#
+          (throw (ex-info (str '~message "\n" '~x)
+                          {:line (:line (meta '~x))}))))))
 
 (defn read-project []
   (let [rdr (clojure.lang.LineNumberingPushbackReader.
@@ -65,7 +66,7 @@
   `(let [dojo# (when-let [dojo# (clojure.java.io/resource ~dojo-path)]
                  (read-string (format "(do %s)" (slurp dojo#))))]
      (do-isolated
-      (use '~'[koan-engine.core :only [meditations __ ___]]
-           '~'[koan-engine.checker :only [ensure-failure]])
-      (eval dojo#)
-      ~@body)))
+       (use '~'[koan-engine.core :only [meditations __ ___]]
+            '~'[koan-engine.checker :only [ensure-failure]])
+       (eval dojo#)
+       ~@body)))

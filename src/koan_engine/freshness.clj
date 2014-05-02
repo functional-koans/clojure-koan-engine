@@ -1,5 +1,5 @@
 (ns koan-engine.freshness
-  (:use [fresh.core :only [clj-files-in freshener]]
+  (:use [fresh.core :only [clj-files-in make-fresh]]
         [clojure.java.io :only [file]]
         [koan-engine.koans :only [among-paths?
                                   namaste
@@ -9,13 +9,12 @@
   (:import [java.util.concurrent ScheduledThreadPoolExecutor TimeUnit]))
 
 (defn files-to-keep-fresh [koan-root]
-  (constantly
-   (clj-files-in (file koan-root))))
+  (clj-files-in (file koan-root)))
 
 (defn report-refresh [opt-map report]
   (when-let [refreshed-files (seq (:reloaded report))]
     (let [{:keys [dojo-resource koan-resource koan-root]} opt-map
-          path-seq    (ordered-koan-paths koan-root koan-resource)
+          path-seq (ordered-koan-paths koan-root koan-resource)
           these-koans (filter (among-paths? refreshed-files)
                               path-seq)]
       (when (every? (partial tests-pass? dojo-resource)
@@ -29,8 +28,15 @@
 
 (defn refresh!
   [{:keys [koan-root] :as opts}]
-  (freshener (files-to-keep-fresh koan-root)
-             (partial report-refresh opts)))
+  (let [listing-atom (atom {})]
+    (fn []
+      (try
+        (make-fresh listing-atom
+                    (files-to-keep-fresh koan-root)
+                    (partial report-refresh opts))
+        (catch Throwable t
+          ;; Fresh `require`s every ns, so ignore macroexpansion failures
+          )))))
 
 (def scheduler (ScheduledThreadPoolExecutor. 1))
 
