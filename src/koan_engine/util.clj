@@ -67,6 +67,7 @@
                  (read-string (format "(do %s)" (slurp dojo#))))]
      (do-isolated
        (use '~'[koan-engine.core :only [meditations __ ___]]
+            '~'[koan-engine.random :only [random-koan]]
             '~'[koan-engine.checker :only [ensure-failure]])
        (eval dojo#)
        ~@body)))
