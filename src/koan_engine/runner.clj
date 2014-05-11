@@ -1,7 +1,8 @@
 (ns koan-engine.runner
   (:use [koan-engine.freshness :only [setup-freshener]])
   (:require [koan-engine.util :as u]
-            [koan-engine.checker :as checker]))
+            [koan-engine.checker :as checker]
+            [koan-engine.random :as random]))
 
 (def default-koan-map
   {:koan-root "src/koans"
@@ -16,4 +17,5 @@
                         (:koan (u/read-project)))]
     (case task
       "run"  (setup-freshener koan-map)
-      "test" (checker/test koan-map))))
+      "test" (checker/test koan-map)
+      "random" (random/runner koan-map))))
