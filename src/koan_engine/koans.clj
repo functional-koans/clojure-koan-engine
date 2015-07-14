@@ -33,8 +33,6 @@
 
 (defn tests-pass? [dojo-path file-path]
   (u/with-dojo [dojo-path]
-    (print "Considering" (str file-path "..."))
-    (println)
     (flush)
     (try (load-file file-path)
          true
