@@ -1,6 +1,7 @@
 (ns koan-engine.koans
   (:use [clojure.java.io :only [file resource]])
-  (:require [koan-engine.util :as u]))
+  (:require [koan-engine.util :as u]
+            [clojure.string :as str]))
 
 ;; TODO: Proper koan validation. Accept the path as an argument.
 (defn ordered-koans [answer-path]
@@ -24,7 +25,7 @@
 (defn report-error [file-path line error]
   (let [message (or (.getMessage error) (.toString error))]
     (println "\nNow meditate upon"
-             (str file-path
+             (str (last (str/split file-path #"/"))
                   (when line (str ":" line))))
     (println "---------------------")
     (println "Assertion failed!")
