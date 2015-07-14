@@ -2,4 +2,5 @@
   :description "Koan Engine for Clojure projects."
   :dependencies [[org.clojure/clojure "1.4.0"]
                  [fresh "1.0.2"]
-                 [jline "0.9.94" :exclusions [junit]]])
+                 [jline "0.9.94" :exclusions [junit]]
+                 [io.aviso/pretty "0.1.18"]])
