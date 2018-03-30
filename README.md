@@ -16,10 +16,14 @@ The student' job is to fill in the blanks in such a way that the code form throw
 
 Koans are a wonderful way to teach users by example. If you maintain or use a library in Clojure, consider putting together a custom Koan project!
 
-The easiest way to start writing koans for your library is to generate a new project with the `koan-template` leiningen plugin (source code [on github](https://github.com/functional-koans/koan-template). Make sure you have [Leiningen](http://github.com/technomancy/leiningen) installed, then run the following commands:
+The easiest way to start writing koans for your library is to generate a new project with the `koan-template` leiningen plugin (source code [on github](https://github.com/functional-koans/koan-template). Make sure you have [Leiningen](http://github.com/technomancy/leiningen) installed.  Add the plugin to your Leiningen '~/.lein/profiles.clj' file.
 
-    lein plugin install lein-newnew 0.1.2   # Skip if you already have lein-newnew installed!
-    lein plugin install koan-template 0.1.1
+    {:user {:plugins [
+      [koan/lein-template "0.1.3"]
+    ]}}
+
+Use these commands to great a new project based on the koan template.
+
     lein new koan <your-project-name>
     cd <your-project-name>
     chmod +x script/*
