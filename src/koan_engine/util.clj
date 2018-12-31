@@ -31,7 +31,7 @@
 
 (defmacro fancy-assert
   "Assertion with fancy error messaging."
-  ([x] (fancy-assert x ""))
+  ([x] `(fancy-assert ~x ""))
   ([x message]
      `(try
         (safe-assert (= true ~x) ~message)

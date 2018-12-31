@@ -36,6 +36,10 @@
     (flush)
     (try (load-file file-path)
          true
+         (catch clojure.lang.Compiler$CompilerException e
+           (let [cause (.getCause e)]
+             (report-error file-path (:line (ex-data cause)) cause))
+           false)
          (catch clojure.lang.ExceptionInfo ei
            (report-error file-path (:line (ex-data ei)) ei)
            false)
